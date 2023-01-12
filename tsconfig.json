@@ -1,4 +1,4 @@
-/// <reference types="react-scripts" />
+
 {
     "compilerOptions": {
       "target": "es5",
