@@ -10,6 +10,6 @@ declare module 'styled-components' {
     // 테마가 어떻게 보일지 설명할 부분 => 테마의 형태, 속성
     textColor: string;
     bgColor: string;
-    btnColor:string;
+    accentColor:string;
   }
 }
