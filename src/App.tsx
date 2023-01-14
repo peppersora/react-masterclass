@@ -65,6 +65,8 @@ body {
 }
 a {
   text-decoration:none;
+  color: inherit;
+  /* color는 부모에게서 가져오라고 함 */
 }
 `;
 
