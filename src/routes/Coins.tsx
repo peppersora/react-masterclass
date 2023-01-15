@@ -21,15 +21,20 @@ const Coin = styled.li`
     color: ${(props) => props.theme.bgColor};
     border-radius: 15px;
     margin-bottom: 10px;
+   
     a {
         padding: 5px;
         /* 패딩을 link에 주는순간 텍스트 가까이 가지 않아도
         마우스커서와 색이 변경된다.
         */
         transition: color 0.2s ease-in;
-        display: block;
+        align-items: center;
+        display: flex; 
+        /* icon을 가운데정렬하기 위해 block에서 flex로 변경 */
         /* 클릭선택의 범위를 넓히기위해 
         display: block을 추가 */
+        margin-left: 5px;
+        
     }
     &:hover{
     /* link를 사용했지만 
@@ -52,6 +57,13 @@ const Loader = styled.span`
     text-align: center;
     display: block;
 `;
+
+const Img = styled.img`
+    width: 35px;
+    height: 35px;
+    margin-right: 10px;
+`;
+
 
 const coins =[
     
@@ -135,9 +147,17 @@ function Coins(){
                 {loading ? (<Loader>Loading...</Loader>) :
                ( 
                 <CoinsList>
-                    {coins.map((coin: { id: Key | null | undefined; name: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | ReactFragment | ReactPortal | null | undefined; }) =>(
+                    {coins.map((coin) => (
                     <Coin key={coin.id}>
-                        <Link to={`/${coin.id}`}>
+                        <Link to={
+                            // pathname 생략됨
+                            `/${coin.id}`
+                            }
+                            state={coin.name}
+                            >
+                            <Img 
+                            src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
+                            />
                         {coin.name} &rarr;
                         </Link>
                         </Coin>
