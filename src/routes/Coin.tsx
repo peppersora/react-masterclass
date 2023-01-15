@@ -159,7 +159,6 @@ function Coin() {
             <Loader>Loading...</Loader>
             ) : (
             <>
-            <Outlet/>
             <Overview>
             <OverviewItem>
               <span>Rank:</span>
@@ -184,7 +183,12 @@ function Coin() {
               <span>Max Supply:</span>
               <span>{priceInfo?.max_supply}</span>
             </OverviewItem>
+            <Outlet/>
             </Overview>
+            <Routes>
+            <Route path="chart" element={<Chart/>}/>
+            <Route path="price" element={<Price/>}/>  
+            </Routes>
         </>
       )}
             </Container>
