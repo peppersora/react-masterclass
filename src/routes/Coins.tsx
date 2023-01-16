@@ -1,7 +1,9 @@
 
+import { useQuery } from "@tanstack/react-query";
 import { useState, Key, ReactElement, JSXElementConstructor, ReactFragment, ReactPortal, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { fetchCoins } from "./api";
 
 const Container = styled.div`
     padding: 0px 20px;
@@ -110,35 +112,46 @@ interface CoinInterface{
 
 
 function Coins(){
-    const [loading, setLoading] = useState(true);
-    const [coins, setCoins] = useState<CoinInterface[]>([]);
+    /*useQuery는 두개의 argument가 필요하다
+    첫째는 [querykey]가 필요한데 이것은 우리 query의 고유식별자이다.
+    두번째는 fetcher함수이다.(fetchcoins)
+    그리고 {} 에 usequery가 return 하는것을 받아서 넣어주기로 한다.
+    정리하면, usequeryhook은 fetcher함수를 부르고
+    fetcher함수가 loading중이라면 react query는 여기서 그걸 알려줄것이다.
+    usequery가 feter함수를 부르고 fetcher함수가 끝나면
+    reactquery는 qpi에있는 json을 data에 있는 json에 넣을 것이다.
+    */
+    const {isLoading,data} = useQuery(["allCoins"], fetchCoins)
+    
+    // const [loading, setLoading] = useState(true);
+    // const [coins, setCoins] = useState<CoinInterface[]>([]);
 
     /* 특정한시기에만 render하기 위한것 => useEffect
      * 1. component의 시작부분에 코드가 실행
      * 2. component가 끝날때 실행
      * 3.  뭐든 변화가 일어날때마다 실행 */
 
-    useEffect(() => {
+    // useEffect(() => {
         // 우리 component life의 시작점에서만 실행
         // 아래처럼 만든 function은 즉시 바로 실행된다.
         // (() => console.log(1))(); <= 바로 실행된다.
         /* 위에는 async, 아래는 api의 response를 받기위해
         await을 사용할 것이다.
          */
-       (async() => {
-        const response = await fetch("https://api.coinpaprika.com/v1/coins");
-        const json = await response.json();
+    //    (async() => {
+    //     const response = await fetch("https://api.coinpaprika.com/v1/coins");
+    //     const json = await response.json();
         // console.log(json);
         /* array 잘라서 가져오기
         const a =[1,2,3,4,5]
         a.slice(0,3) => [1,2,3]
         a.slice(0,5) => [1,2,3,4,5]
         */
-        setCoins(json.slice(0,100));
-        setLoading(false);
-    }) ();
-    },[])
-    console.log(coins);
+    //     setCoins(json.slice(0,100));
+    //     setLoading(false);
+    // }) ();
+    // },[])
+    // console.log(coins);
     return(
         <Container>
             <Header>
