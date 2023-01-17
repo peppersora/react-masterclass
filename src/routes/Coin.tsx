@@ -1,8 +1,10 @@
 
+import { useQuery } from "react-query";
 import { useEffect, useState } from "react";
 import { Link, useMatch } from "react-router-dom";
 import { Route, Routes, useLocation, useParams,Outlet } from "react-router-dom";
 import styled from "styled-components";
+import { fetchCoinInfo, fetchCoinTickers } from "./api";
 import Chart from "./Chart";
 import Price from "./Price";
 
@@ -150,47 +152,51 @@ interface PriceData{
 }
 
 function Coin() {
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true);
     const { coinId } = useParams();
     // param은 타입입력안해도 v6부터 자동으로 된다고...
     const {state} = useLocation() as Routestate; 
-    const [info, setInfo] = useState<InfoData>();
-    const [priceInfo, setPriceInfo] = useState<PriceData>();
+    // const [info, setInfo] = useState<InfoData>();
+    // const [priceInfo, setPriceInfo] = useState<PriceData>();
     // usematch에게 우리가 coinId에 price에 있는지 확인해달라는뜻
     const priceMatch = useMatch("/:coinId/price");
     /*console.log(priceMatch);
       확인해보면 내가 그 url에 있다면 pricematch에 관한 object를 받게되고
       그 url에 없다면 null을 받게 된다.*/
     const chartMatch = useMatch("/:coinId/chart");
-    console.log(chartMatch);
-
-
-    useEffect(() => {
-        (async() => {
-            const infoData= await (
-            await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-            ).json();
-            // console.log(info);
-                // json 1개 끝
-            const priceData = await(
-            await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-            ).json();
-            // console.log(priceInfo);
-                setInfo(infoData);
-                setPriceInfo(priceData);
-                setLoading(false);
+    // console.log(chartMatch);
+    const {isLoading: infoLoading, data:infoData} = useQuery<InfoData>
+    (["info",coinId],() => fetchCoinInfo(`${coinId}`));
+    const {isLoading: tickersLoading, data:tickersData} = useQuery<PriceData>
+    (["tickers",coinId], () => fetchCoinTickers(`${coinId}`));
+    // useEffect(() => {
+    //     (async() => {
+    //         const infoData= await (
+    //         await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
+    //         ).json();
+    //         // console.log(info);
+    //             // json 1개 끝
+    //         const priceData = await(
+    //         await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
+    //         ).json();
+    //         // console.log(priceInfo);
+    //             setInfo(infoData);
+    //             setPriceInfo(priceData);
+    //             setLoading(false);
                
-        })();
-    },[coinId]);
+    //     })();
+    // },[coinId]);
     // coinId가 변한다면 [] 안에 코드는 다시 실행될 것이다.
     /*  우리는 coinId가 변하지 않는다는것을 알기 때문에
         [] 이렇게 해도 상관없다. coinId는 state를 사용하지 않기
         때문에*/
+    const loading = infoLoading || tickersLoading;
     return(
         <Container>
         <Header>
             <Title>
-                {state ? state : "Loading..." }
+                {state ? state : loading 
+                ? "Loading..." : infoData?.name }
                 </Title>
             </Header>
                 {loading ? (
@@ -200,28 +206,28 @@ function Coin() {
             <Overview>
             <OverviewItem>
               <span>Rank:</span>
-              <span>{info?.rank}</span>
+              <span>{infoData?.rank}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Symbol:</span>
-              <span>${info?.symbol}</span>
+              <span>${infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Open Source:</span>
-              <span>{info?.open_source ? "Yes" : "No"}</span>
+              <span>{infoData?.open_source ? "Yes" : "No"}</span>
             </OverviewItem>
           </Overview>
-          <Description>{info?.description}</Description>
+          <Description>{infoData?.description}</Description>
           <Overview>
             <OverviewItem>
               <span>Total Suply:</span>
-              <span>{priceInfo?.total_supply}</span>
+              <span>{tickersData?.total_supply}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Max Supply:</span>
-              <span>{priceInfo?.max_supply}</span>
+              <span>{tickersData?.max_supply}</span>
             </OverviewItem>
-            <Outlet/>
+            <Outlet context={{coin:"coin"}}/>
             </Overview>
             <Tabs>
               <Tab isActive={chartMatch !== null}>

@@ -1,5 +1,5 @@
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from "react-query";
 import { useState, Key, ReactElement, JSXElementConstructor, ReactFragment, ReactPortal, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -98,7 +98,7 @@ type: "token",
 },
 ]
 
-interface CoinInterface{
+interface ICoin{
     id: string,
     name: string,
     symbol: string,
@@ -120,9 +120,10 @@ function Coins(){
     fetcher함수가 loading중이라면 react query는 여기서 그걸 알려줄것이다.
     usequery가 feter함수를 부르고 fetcher함수가 끝나면
     reactquery는 qpi에있는 json을 data에 있는 json에 넣을 것이다.
+
     */
-    const {isLoading,data} = useQuery(["allCoins"], fetchCoins)
-    
+    const {isLoading,data} = useQuery<ICoin[]>(["allCoins"], fetchCoins)
+    console.log(isLoading,data);
     // const [loading, setLoading] = useState(true);
     // const [coins, setCoins] = useState<CoinInterface[]>([]);
 
@@ -157,10 +158,10 @@ function Coins(){
             <Header>
                 <Title>코인</Title>
                 </Header>
-                {loading ? (<Loader>Loading...</Loader>) :
+                {isLoading ? (<Loader>Loading...</Loader>) :
                ( 
                 <CoinsList>
-                    {coins.map((coin) => (
+                    {data?.slice(0,50).map((coin) => (
                     <Coin key={coin.id}>
                         <Link to={
                             // pathname 생략됨

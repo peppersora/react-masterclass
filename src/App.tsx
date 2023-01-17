@@ -3,6 +3,9 @@ import { createGlobalStyle } from "styled-components";
 /* 하나의 component를 만들수 있게해주는데 rendering될떄
  컴포넌트가 전역 스코프에 스타일을 올려준다.*/
 import Router from "./Router";
+import { useQuery } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools'
+
 
 const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
@@ -78,6 +81,7 @@ function App() {
     */}
     <GlobalStyle />
     <Router/>
+    <ReactQueryDevtools initialIsOpen={true}/>
     </>
   );
 }
