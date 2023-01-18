@@ -1,5 +1,6 @@
 
 import { useQuery } from "react-query";
+import {Helmet} from "react-helmet";
 import { useEffect, useState } from "react";
 import { Link, useMatch } from "react-router-dom";
 import { Route, Routes, useLocation, useParams,Outlet } from "react-router-dom";
@@ -167,8 +168,16 @@ function Coin() {
     // console.log(chartMatch);
     const {isLoading: infoLoading, data:infoData} = useQuery<InfoData>
     (["info",coinId],() => fetchCoinInfo(`${coinId}`));
+    
     const {isLoading: tickersLoading, data:tickersData} = useQuery<PriceData>
-    (["tickers",coinId], () => fetchCoinTickers(`${coinId}`));
+    (["tickers",coinId],
+    () => fetchCoinTickers(`${coinId}`),
+    
+    {
+      refetchInterval: 5000,
+    }
+    
+    );
     // useEffect(() => {
     //     (async() => {
     //         const infoData= await (
@@ -193,6 +202,10 @@ function Coin() {
     const loading = infoLoading || tickersLoading;
     return(
         <Container>
+          <Helmet>
+            <title>{state ? state : loading 
+                ? "Loading..." : infoData?.name }</title>
+            </Helmet>
         <Header>
             <Title>
                 {state ? state : loading 
@@ -213,8 +226,8 @@ function Coin() {
               <span>${infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{infoData?.open_source ? "Yes" : "No"}</span>
+              <span>Price:</span>
+              <span>{tickersData?.quotes.USD.price.toFixed(4)}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>

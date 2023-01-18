@@ -25,7 +25,11 @@ function Chart(){
     // console.log(params);
     const coinId = useOutletContext<ChartProps>();
     // console.log(data);
-    const {isLoading,data} = useQuery<IHistorical[]>(["ohlcv",coinId],() => fetchCoinHistory(`${coinId}`));
+    const {isLoading,data} = useQuery<IHistorical[]>(["ohlcv",coinId],() => fetchCoinHistory(`${coinId}`),
+    
+    );
+    
+    
     return(
         <div>{isLoading ? "Loading chart..." : 
         <ApexChart 
@@ -34,7 +38,7 @@ function Chart(){
             {   name:"hello",
                 data: data?.map((price) => Number(price.close)) as number[],
             },
-            {   name:"sales",
+            {   name:"Price",
                 data:[13,47,39,28,19,55],
             },
         ]}
@@ -43,18 +47,42 @@ function Chart(){
                 mode:"dark",
             },
             chart:{
-                height:500,
+                height:300,
                 width:500,
                 toolbar:{
                     show:false,
-                }
+                },
+                background:"transparent",
             },
             stroke:{
                 curve:"smooth",
                 width:5,
             },
+            grid:{
+                show:false,
+            },
+            yaxis:{
+                show:false,
+            },
+            xaxis: { 
+                labels: {show:false},
+                categories:["a","b","a","b","a","b","a","b","a","b","a","b","a","b","a"]
+        
+        },
+        // x축 끝
+        fill:{ 
+            type: "gradient",
+            gradient:{gradientToColors:["blue"], stops:[0,100]},
+        },
+        colors:["red"],
+        tooltip:{
+            y:{
+                formatter: (value) => `$ ${value.toFixed(2)}`,
+                // 숫자의 값을 소숫점아래 둘째자리까지로 나타내준다.
+            },
+        },
 
-        }}
+    }}// options끝
         />}</div>
     );
 }
