@@ -1,5 +1,4 @@
 
-
 const BASE_URL = `https://api.coinpaprika.com/v1`;
 
 export async function fetchCoins(){
@@ -19,7 +18,7 @@ export  async function fetchCoinTickers(coinId:String){
     return await response.json();
 }
 
-// chart에대한 쿼리
+// chart tap에대한 쿼리
 export async function fetchCoinHistory(coinId:String){
     const endDate = Math.floor(Date.now()/1000);
     // 현재시간에서 1주 1시간에 해당하는 초를 뻄
@@ -27,3 +26,11 @@ export async function fetchCoinHistory(coinId:String){
     const response = await fetch("https://ohlcv-api.nomadcoders.workers.dev/?coinId=btc-bitcoin");
     return await response.json();
 }
+
+// price tap에 관한 쿼리
+export async function fetchCoinPrice(coinId:String){
+    const response = await fetch("https://ohlcv-api.nomadcoders.workers.dev/?coinId=btc-bitcoin");
+    return await response.json();
+}
+
+

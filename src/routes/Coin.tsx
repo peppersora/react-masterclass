@@ -5,26 +5,34 @@ import { useEffect, useState } from "react";
 import { Link, useMatch } from "react-router-dom";
 import { Route, Routes, useLocation, useParams,Outlet } from "react-router-dom";
 import styled from "styled-components";
-import { fetchCoinInfo, fetchCoinTickers } from "./api";
+import { fetchCoinInfo, fetchCoins, fetchCoinTickers } from "./api";
 import Chart from "./Chart";
 import Price from "./Price";
-
+import { FaAngleLeft, FaAngleRight} from "react-icons/fa";
+import Coins from "./Coins";
+import { link } from "fs";
+import path from "path";
 
 const Container = styled.div`
     padding: 0px 20px;
 `;
 
 const Header = styled.header`
-    height: 15vh;
     display:flex;
-    justify-content: center;
+    height: 15vh;
+    flex-direction: row;
+    justify-content: space-around;
     align-items: center;
+    
+    
 `;
 
 
 const Title = styled.h1`
+display: flex;
 font-size:48px;
 color: ${props => props.theme.accentColor};
+
 `;
 
 const Loader = styled.span`
@@ -39,6 +47,7 @@ const Overview = styled.div`
   padding: 10px 20px;
   border-radius: 10px;
 `;
+
 
 const OverviewItem = styled.div`
   display: flex;
@@ -117,7 +126,6 @@ interface InfoData {
     first_data_at: string;
     last_data_at: string;
 }
-
 interface PriceData{
     id: string;
     name: string;
@@ -152,6 +160,18 @@ interface PriceData{
     };
 }
 
+interface ICoin{
+  id: string,
+  name: string,
+  symbol: string,
+  rank: number,
+  is_new: boolean,
+  is_active: boolean,
+  type: string,
+}
+
+
+
 function Coin() {
     // const [loading, setLoading] = useState(true);
     const { coinId } = useParams();
@@ -161,11 +181,15 @@ function Coin() {
     // const [priceInfo, setPriceInfo] = useState<PriceData>();
     // usematch에게 우리가 coinId에 price에 있는지 확인해달라는뜻
     const priceMatch = useMatch("/:coinId/price");
-    /*console.log(priceMatch);
-      확인해보면 내가 그 url에 있다면 pricematch에 관한 object를 받게되고
-      그 url에 없다면 null을 받게 된다.*/
+    // console.log(priceMatch);
+      // 확인해보면 내가 그 url에 있다면 pricematch에 관한 object를 받게되고
+      // 그 url에 없다면 null을 받게 된다.
     const chartMatch = useMatch("/:coinId/chart");
     // console.log(chartMatch);
+
+    const {isLoading,data} = useQuery<ICoin[]>(["allCoins"], fetchCoins)
+    // console.log(isLoading,data);
+
     const {isLoading: infoLoading, data:infoData} = useQuery<InfoData>
     (["info",coinId],() => fetchCoinInfo(`${coinId}`));
     
@@ -174,7 +198,7 @@ function Coin() {
     () => fetchCoinTickers(`${coinId}`),
     
     {
-      refetchInterval: 5000,
+      // refetchInterval: 5000,
     }
     
     );
@@ -206,11 +230,27 @@ function Coin() {
             <title>{state ? state : loading 
                 ? "Loading..." : infoData?.name }</title>
             </Helmet>
+
         <Header>
+          <Link to={"/"}>
+        <FaAngleLeft 
+          className="icon" size="50px" style={        
+            { 
+            display:"flex",
+            alignContent:"space-between",
+            justifyItems:"flex-start",
+          
+          }
+          
+        }>
+        </FaAngleLeft>
+           </Link>
             <Title>
                 {state ? state : loading 
                 ? "Loading..." : infoData?.name }
                 </Title>
+
+                <FaAngleRight className="icon" size="50px"/>
             </Header>
                 {loading ? (
             <Loader>Loading...</Loader>
@@ -240,7 +280,9 @@ function Coin() {
               <span>Max Supply:</span>
               <span>{tickersData?.max_supply}</span>
             </OverviewItem>
-            <Outlet context={{coin:"coin"}}/>
+            <Outlet context={
+          
+              {coin:"coin"}}/>
             </Overview>
             <Tabs>
               <Tab isActive={chartMatch !== null}>
@@ -265,4 +307,5 @@ function Coin() {
     );
 }
 export default Coin;
+
 

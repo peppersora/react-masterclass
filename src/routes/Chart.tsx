@@ -24,8 +24,9 @@ function Chart(){
     // const params = useParams();
     // console.log(params);
     const coinId = useOutletContext<ChartProps>();
-    // console.log(data);
-    const {isLoading,data} = useQuery<IHistorical[]>(["ohlcv",coinId],() => fetchCoinHistory(`${coinId}`),
+    
+    const {isLoading,data} = useQuery<IHistorical[]>
+    (["ohlcv",coinId],() => fetchCoinHistory(`${coinId}`),
     
     );
     
@@ -75,12 +76,12 @@ function Chart(){
             gradient:{gradientToColors:["blue"], stops:[0,100]},
         },
         colors:["red"],
-        tooltip:{
-            y:{
-                formatter: (value) => `$ ${value.toFixed(2)}`,
-                // 숫자의 값을 소숫점아래 둘째자리까지로 나타내준다.
-            },
-        },
+        // tooltip:{
+        //     y:{
+        //         formatter: (value) => `$ ${value.toFixed(2)}`,
+        //          숫자의 값을 소숫점아래 둘째자리까지로 나타내준다.
+        //     },
+        // },
 
     }}// options끝
         />}</div>
