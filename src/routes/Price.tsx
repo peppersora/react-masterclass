@@ -5,6 +5,14 @@ import { fetchCoinInfo, fetchCoinPrice, fetchCoinTickers } from "./api";
 import { stringify } from "querystring";
 import styled from "styled-components";
 
+
+
+const Container = styled.div`
+    padding: 0px 20px;
+`;
+
+
+
 const Overview = styled.div`
   display: flex;
   justify-content: space-between;
@@ -52,61 +60,37 @@ const Tab = styled.span<{ isActive: boolean }>`
 `;
 
 
-interface PriceProps{
-  coinId:string;
-}
-
-interface PriceData{
-  id: string;
-  name: string;
-  symbol: string;
-  rank: number;
-  circulating_supply: number;
-  total_supply: number;
-  max_supply: number;
-  beta_value: number;
-  first_data_at: string;
-  last_updated: string;
-  quotes: {
-    USD: {
-      ath_date: string;
-      ath_price: number;
-      market_cap: number;
-      market_cap_change_24h: number;
-      percent_change_1h: number;
-      percent_change_1y: number;
-      percent_change_6h: number;
-      percent_change_7d: number;
-      percent_change_12h: number;
-      percent_change_15m: number;
-      percent_change_24h: number;
-      percent_change_30d: number;
-      percent_change_30m: number;
-      percent_from_price_ath: number;
-      price: number;
-      volume_24h: number;
-      volume_24h_change_24h: number;
-    };
-  };
+interface IHistorical{
+  time_open: string;
+  time_close: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+  market_cap: number;
 }
 
 
 function Price(){
 
-  const coinId = useOutletContext<PriceProps>();
+  const coinId = useOutletContext<string>();
   // console.log(coinId);
-  const {isLoading, data} = useQuery<PriceData[]>
+  const {isLoading, data} = useQuery<IHistorical[]>
   (["prices",coinId],() => fetchCoinPrice(`${coinId}`));
   return(
-    <div>{isLoading ? "Loading price" : 
-   
-     <Overview> 
-    <span>{data?.map((price) => (price.id))}</span>
-    </Overview> 
-    
-  
-  }
-</div>
+    <Container>
+    {data?.map((price) => (
+      <OverviewItem
+        key={price.time_close}
+        time={price.time_close}
+        open={price.open}
+        high={price.high}
+        low={price.low}
+        close={price.close}
+      ></OverviewItem>
+    ))}
+  </Container>
 );
 }
 
