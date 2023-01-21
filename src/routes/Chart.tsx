@@ -17,16 +17,16 @@ interface IHistorical{
 
 
 interface ChartProps {
-    coinId: string;
+   
     // mode변경을 위해 coin으로부터 받은 props
     isDark: boolean;
 
 }
 
-function Chart({coinId,isDark}:ChartProps){
-    // const params = useParams();
+function Chart({isDark}:ChartProps){
+    const params = useParams();
     // console.log(params);
-    // const coinId = useOutletContext<ChartProps>();
+    const coinId = useOutletContext<ChartProps>();
     
     const {isLoading,data} = useQuery<IHistorical[]>
     (["ohlcv",coinId],() => fetchCoinHistory(`${coinId}`),
