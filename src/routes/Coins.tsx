@@ -21,7 +21,7 @@ const CoinsList = styled.ul``;
 
 const Coin = styled.li`
     background-color: white;
-    color: ${(props) => props.theme.bgColor};
+    color: ${(props) => props.theme.textColor};
     border-radius: 15px;
     margin-bottom: 10px;
    
@@ -109,10 +109,15 @@ interface ICoin{
     type: string,
 }
 
+interface ICoinsProps{
+    toggleDark: () => void;
+    // 여기에서도 app에서 보내는것과 마찬가지
+}
 
 
 
-function Coins(){
+
+function Coins({toggleDark}:ICoinsProps){
     /*useQuery는 두개의 argument가 필요하다
     첫째는 [querykey]가 필요한데 이것은 우리 query의 고유식별자이다.
     두번째는 fetcher함수이다.(fetchcoins)
@@ -161,6 +166,7 @@ function Coins(){
             </Helmet>
             <Header>
                 <Title>코인</Title>
+                <button onClick={toggleDark}>Toggle Mode</button>
                 </Header>
                 {isLoading ? (<Loader>Loading...</Loader>) :
                ( 

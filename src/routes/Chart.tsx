@@ -18,12 +18,15 @@ interface IHistorical{
 
 interface ChartProps {
     coinId: string;
+    // mode변경을 위해 coin으로부터 받은 props
+    isDark: boolean;
+
 }
 
-function Chart(){
+function Chart({coinId,isDark}:ChartProps){
     // const params = useParams();
     // console.log(params);
-    const coinId = useOutletContext<ChartProps>();
+    // const coinId = useOutletContext<ChartProps>();
     
     const {isLoading,data} = useQuery<IHistorical[]>
     (["ohlcv",coinId],() => fetchCoinHistory(`${coinId}`),
@@ -45,7 +48,7 @@ function Chart(){
         ]}
         options={{
             theme:{
-                mode:"dark",
+                mode: isDark ? "dark" : "light",
             },
             chart:{
                 height:300,

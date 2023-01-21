@@ -170,9 +170,13 @@ interface ICoin{
   type: string,
 }
 
+interface ICoinProps{
+  isDark: boolean;
+ 
+}
 
 
-function Coin() {
+function Coin( {isDark}:ICoinProps) {
     // const [loading, setLoading] = useState(true);
     const { coinId } = useParams();
     // param은 타입입력안해도 v6부터 자동으로 된다고...
@@ -298,7 +302,10 @@ function Coin() {
               </Tab>
             </Tabs>
             <Routes>
-            <Route path="chart" element={<Chart/>}/>
+            <Route path="chart" 
+            element={<Chart
+              
+            isDark={isDark}/>}/>
             <Route path="price" element={<Price/>}/>  
             </Routes>
         </>

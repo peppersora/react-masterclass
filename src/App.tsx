@@ -1,10 +1,12 @@
 
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
 /* 하나의 component를 만들수 있게해주는데 rendering될떄
  컴포넌트가 전역 스코프에 스타일을 올려준다.*/
 import Router from "./Router";
 import { useQuery } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools'
+import { darkTheme,lightTheme } from "./theme";
+import { useState } from "react";
 
 
 const GlobalStyle = createGlobalStyle`
@@ -74,16 +76,30 @@ a {
 `;
 
 function App() {
+//1. lightmode/darkmode상태 대한 state를 만든다
+  const [isDark, setIsDark] = useState(false);
+//2. 상태를 변경시켜줄수 있는 toggle function을 만들자
+//2-1. state를 만들때 특징은 value가 아닌 funcion을 보낸다.
+  const toggleDark = () => setIsDark((current) => !current);
+  // setIsDark가 ture이면(current) false를 return하고,
+  //  setIsDark가 false이면(current) true를 return한다.
+
   return (
     <>
     {/* <> fragment style 다시말해 유령style => 아무것도 없음
       이 태그로 인해 style적용은 body에서 오는것이됨
     */}
+    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
     <GlobalStyle />
-    <Router/>
+    <Router isDark={isDark} toggleDark={toggleDark} />
+    {/* router안에 coins가 있기때문에 app에서
+    router로 보내면 된다. 하지만 router가 prop을 받을 준비가 
+    안되어있다 => router파일에서 어떤 prop을 받을것인지 알려줘야함 */}
     <ReactQueryDevtools initialIsOpen={true}/>
+    </ThemeProvider>
     </>
   );
 }
+
 
 export default App;

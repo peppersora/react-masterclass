@@ -79,18 +79,19 @@ function Price(){
   const {isLoading, data} = useQuery<IHistorical[]>
   (["prices",coinId],() => fetchCoinPrice(`${coinId}`));
   return(
-    <Container>
-    {data?.map((price) => (
-      <OverviewItem
-        key={price.time_close}
-        time={price.time_close}
-        open={price.open}
-        high={price.high}
-        low={price.low}
-        close={price.close}
-      ></OverviewItem>
-    ))}
-  </Container>
+  //   <Container>
+  //   {data?.map((price) => (
+  //     <OverviewItem
+  //       key={price.time_close}
+  //       time={price.time_close}
+  //       open={price.open}
+  //       high={price.high}
+  //       low={price.low}
+  //       close={price.close}
+  //     ></OverviewItem>
+  //   ))}
+  // </Container>
+  <h1>price</h1>
 );
 }
 
