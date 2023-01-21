@@ -5,6 +5,8 @@ import { useState, Key, ReactElement, JSXElementConstructor, ReactFragment, Reac
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "./api";
+import { useSetRecoilState } from "recoil";
+import { isDarkAtom } from "./atoms";
 
 const Container = styled.div`
     padding: 0px 20px;
@@ -110,14 +112,16 @@ interface ICoin{
 }
 
 interface ICoinsProps{
-    toggleDark: () => void;
-    // 여기에서도 app에서 보내는것과 마찬가지
+   
 }
 
 
 
 
-function Coins({toggleDark}:ICoinsProps){
+function Coins(){
+    const setDarkAtom = useSetRecoilState(isDarkAtom);
+   const toggleDarkAtom = () => setDarkAtom((current) => !current);
+   
     /*useQuery는 두개의 argument가 필요하다
     첫째는 [querykey]가 필요한데 이것은 우리 query의 고유식별자이다.
     두번째는 fetcher함수이다.(fetchcoins)
@@ -165,8 +169,8 @@ function Coins({toggleDark}:ICoinsProps){
             <title>코인</title>
             </Helmet>
             <Header>
-                <Title>코인</Title>
-                <button onClick={toggleDark}>Toggle Mode</button>
+               <Title>코인</Title>
+               <button onClick={toggleDarkAtom}>Toggle Mode</button>
                 </Header>
                 {isLoading ? (<Loader>Loading...</Loader>) :
                ( 

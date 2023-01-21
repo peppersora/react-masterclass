@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { useOutletContext } from "react-router-dom";
 import { fetchCoinHistory } from "./api";
 import ApexChart from "react-apexcharts";
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "./atoms";
 
 interface IHistorical{
     time_open: string;
@@ -17,13 +19,11 @@ interface IHistorical{
 
 
 interface ChartProps {
-   
-    // mode변경을 위해 coin으로부터 받은 props
-    isDark: boolean;
-
+// coinId: string;
 }
 
-function Chart({isDark}:ChartProps){
+function Chart({}:ChartProps){
+    const isDark = useRecoilValue(isDarkAtom);
     const params = useParams();
     // console.log(params);
     const coinId = useOutletContext<ChartProps>();
@@ -48,7 +48,7 @@ function Chart({isDark}:ChartProps){
         ]}
         options={{
             theme:{
-                mode: isDark ? "dark" : "light",
+                mode:"dark",
             },
             chart:{
                 height:300,
